@@ -2,36 +2,31 @@
 
 namespace App\Pagination;
 
-use Doctrine\DBAL\Connection;
 use Ifedko\DoctrineDbalPagination\ListBuilder;
 use Ifedko\DoctrineDbalPagination\ListPagination;
 
-class Paginator extends ListBuilder
+class Paginator
 {
     public const PAGE_SIZE = 5;
 
+    /**
+     * @var ListBuilder
+     */
+    private $listBuilder;
     private $currentPage;
     private $pageSize;
     private $results;
     private $numResults;
 
-    public function __construct(Connection $dbConnection, int $pageSize = self::PAGE_SIZE)
+    public function __construct(ListBuilder $listBuilder, int $pageSize = self::PAGE_SIZE)
     {
-        parent::__construct($dbConnection);
+        $this->listBuilder = $listBuilder;
         $this->pageSize = $pageSize;
-    }
-
-    protected function baseQuery()
-    {
-        return $this->dbConnection->createQueryBuilder()
-            ->select('*')
-            ->from('advert')
-            ->orderBy('id', 'ASC');
     }
 
     public function paginate(int $page = 1): self
     {
-        $listPagination = new ListPagination($this);
+        $listPagination = new ListPagination($this->listBuilder);
         $listPage = $listPagination->get($this->pageSize, $page);
 
         $this->currentPage = max(1, $page);

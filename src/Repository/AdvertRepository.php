@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Advert;
+use App\Pagination\ListBuilder\AdvertsListBuilder;
 use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
@@ -17,14 +18,14 @@ use Doctrine\Persistence\ManagerRegistry;
 class AdvertRepository extends ServiceEntityRepository
 {
     /**
-     * @var Connection
+     * @var AdvertsListBuilder
      */
-    private $connection;
+    private $advertsList;
 
     public function __construct(Connection $connection, ManagerRegistry $registry)
     {
         parent::__construct($registry, Advert::class);
-        $this->connection = $connection;
+        $this->advertsList = new AdvertsListBuilder($connection);
     }
 
     /**
@@ -33,6 +34,6 @@ class AdvertRepository extends ServiceEntityRepository
      */
     public function findPaginateAdverts(int $page = 1): Paginator
     {
-        return (new Paginator($this->connection))->paginate($page);
+        return (new Paginator($this->advertsList))->paginate($page);
     }
 }
