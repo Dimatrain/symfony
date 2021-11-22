@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Advert Info{% endblock %}
+
+{% block body %}
+
+<div class="card center" style="width: 600px;">
+    <img src="..." class="card-img-top" alt="picture">
+    <div class="card-body">
+        <h5 class="card-title">{{ advert.name }}</h5>
+        <p class="card-text">{{ advert.text }}</p>
+        <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary">Назад</a>
+    </div>
+</div>
+{% endblock %}
