@@ -2,47 +2,42 @@
 
 namespace App\Pagination;
 
-use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
-use Doctrine\ORM\Tools\Pagination\CountWalker;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\DBAL\Connection;
+use Ifedko\DoctrineDbalPagination\ListBuilder;
+use Ifedko\DoctrineDbalPagination\ListPagination;
 
-class Paginator
+class Paginator extends ListBuilder
 {
     public const PAGE_SIZE = 5;
 
-    private $queryBuilder;
     private $currentPage;
     private $pageSize;
     private $results;
     private $numResults;
 
-    public function __construct(DoctrineQueryBuilder $queryBuilder, int $pageSize = self::PAGE_SIZE)
+    public function __construct(Connection $dbConnection, int $pageSize = self::PAGE_SIZE)
     {
-        $this->queryBuilder = $queryBuilder;
+        parent::__construct($dbConnection);
         $this->pageSize = $pageSize;
+    }
+
+    protected function baseQuery()
+    {
+        return $this->dbConnection->createQueryBuilder()
+            ->select('*')
+            ->from('advert')
+            ->orderBy('id', 'ASC');
     }
 
     public function paginate(int $page = 1): self
     {
+        $listPagination = new ListPagination($this);
+        $listPage = $listPagination->get($this->pageSize, $page);
+
         $this->currentPage = max(1, $page);
-        $firstResult = ($this->currentPage - 1) * $this->pageSize;
 
-        $query = $this->queryBuilder
-            ->setFirstResult($firstResult)
-            ->setMaxResults($this->pageSize)
-            ->getQuery();
-
-        if (0 === \count($this->queryBuilder->getDQLPart('join'))) {
-            $query->setHint(CountWalker::HINT_DISTINCT, false);
-        }
-
-        $paginator = new DoctrinePaginator($query, true);
-
-        $useOutputWalkers = \count($this->queryBuilder->getDQLPart('having') ?: []) > 0;
-        $paginator->setUseOutputWalkers($useOutputWalkers);
-
-        $this->results = $paginator->getIterator();
-        $this->numResults = $paginator->count();
+        $this->results = $listPage['items'] ?? [];
+        $this->numResults = $listPage['total'] ?? 0;
 
         return $this;
     }
@@ -92,7 +87,7 @@ class Paginator
         return $this->numResults;
     }
 
-    public function getResults(): \Traversable
+    public function getResults()
     {
         return $this->results;
     }

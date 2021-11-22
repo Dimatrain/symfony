@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b83cedf4ff556e21512bb8398859a347",
+    "content-hash": "034db1baf791e2a16a9ec67f655e7964",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1510,6 +1510,53 @@
                 }
             ],
             "time": "2021-05-22T16:11:15+00:00"
+        },
+        {
+            "name": "ifedko/php-doctrine-dbal-pagination",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ifedko/php-doctrine-dbal-pagination.git",
+                "reference": "c0e927adb5925c41130da23cd6055274fb0620ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ifedko/php-doctrine-dbal-pagination/zipball/c0e927adb5925c41130da23cd6055274fb0620ac",
+                "reference": "c0e927adb5925c41130da23cd6055274fb0620ac",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^2.0|^3.0",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ifedko\\DoctrineDbalPagination\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ilya Fedko",
+                    "email": "fedko.ilya@gmail.com"
+                },
+                {
+                    "name": "Maxim Gnatenko",
+                    "email": "mgnatenko@gmail.com"
+                }
+            ],
+            "description": "Php pagination builder using doctrine dbal",
+            "time": "2021-06-30T08:02:01+00:00"
         },
         {
             "name": "laminas/laminas-code",

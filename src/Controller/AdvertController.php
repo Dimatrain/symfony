@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Advert;
 use App\Repository\AdvertRepository;
+use Faker\Provider\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdvertController extends AbstractController
 {
     /**
+     * Получение списка
+     *
      * @Route("/", defaults={"page": "1"}, methods="GET", name="advert_index")
      * @Route("/{page<[1-9]\d*>}", methods="GET", name="advert_index_paginated")
      */
@@ -24,19 +26,18 @@ class AdvertController extends AbstractController
     }
 
     /**
-     * @Route("/view/{id}", methods="GET", name="advert_view")
+     * @Route("/view/{id<[1-9]\d*>}", methods="GET", name="advert_view")
      */
-    public function show(int $id): Response
+    public function show(int $id, AdvertRepository $adverts): Response
     {
-        $advert = $this->getDoctrine()
-            ->getRepository(Advert::class)
-            ->find($id);
+        $advert = $adverts->find($id);
 
         if (!$advert) {
             throw $this->createNotFoundException('No product found for id ' . $id);
         }
 
         return $this->render('advert/show.html.twig', [
+            'picture' => Image::imageUrl(),
             'advert' => $advert,
         ]);
     }
